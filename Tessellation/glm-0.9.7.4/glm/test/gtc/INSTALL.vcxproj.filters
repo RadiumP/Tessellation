@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="D:\Thesis\Opengl\Tessellation\Tessellation\glm-0.9.7.4\glm\CMakeFiles\a0e5c75e1a38939fdf5959c9192f0736\INSTALL_force.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{6D5426CF-E4A7-38BB-A010-559C939E89F2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

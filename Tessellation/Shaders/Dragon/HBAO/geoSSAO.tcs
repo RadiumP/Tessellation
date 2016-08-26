@@ -1,0 +1,46 @@
+#version 440 
+
+//http://onrendering.blogspot.com/2011/12/tessellation-on-gpu-curved-pn-triangles.html
+
+
+
+layout(vertices = 3) out;
+
+uniform float tess;
+
+in vec3 vPosition[];
+in vec3 vNormal[];
+in vec2 vTexCoord[];
+
+
+
+
+out vec3 tcPosition[];
+out vec3 tcNormal[];
+out vec2 tcTexCoord[];
+//out PnPatch tcPnPatch[];
+
+#define ID gl_InvocationID
+
+void main()
+{
+	
+
+	tcPosition[ID] = vPosition[ID];
+	tcNormal[ID] = vNormal[ID];
+
+	tcTexCoord[ID] = vTexCoord[ID];
+	
+
+
+	// LoD add here
+	
+    gl_TessLevelOuter[0] = tess;
+	gl_TessLevelOuter[1] = tess;
+	gl_TessLevelOuter[2] = tess;
+
+	gl_TessLevelInner[0] = tess;
+	
+
+
+}

@@ -1,0 +1,108 @@
+#version 400 core
+
+//http://onrendering.blogspot.com/2011/12/tessellation-on-gpu-curved-pn-triangles.html
+
+//PN patch
+struct PnPatch
+{
+	float b210;
+	float b120;
+	float b021;
+	float b012;
+	float b102;
+	float b201;
+	float b111;
+	float n110;
+	float n101;
+	float n011;
+};
+
+
+layout(vertices = 3) out;
+
+in vec3 vPosition[];
+in vec3 vNormal[];
+in vec2 vTexCoord[];
+
+
+
+uniform float tess;
+
+out vec3 tcPosition[];
+out vec3 tcNormal[];
+out vec2 tcTexCoord[];
+out PnPatch tcPnPatch[];
+
+
+#define ID gl_InvocationID
+
+float wij(int i, int j)
+{
+	return dot(vPosition[j] - vPosition[i], vNormal[i]);
+}
+
+float vij(int i, int j)
+{
+	vec3 Pj_minus_Pi = vPosition[j] - vPosition[i];
+	vec3 Ni_plus_Nj = vNormal[i] + vNormal[j];
+	return 2.0f * dot(Pj_minus_Pi, Ni_plus_Nj) / dot(Pj_minus_Pi, Pj_minus_Pi);
+}
+
+void main()
+{
+	//gl_out[ID].gl_Position = gl_in[ID].gl_Position;
+
+
+	
+
+
+
+	float P0 = vPosition[0][ID];//300
+	float P1 = vPosition[1][ID];//030
+	float P2 = vPosition[2][ID];//003
+	float N0 = vNormal[0][ID];//200
+	float N1 = vNormal[1][ID];//020
+	float N2 = vNormal[2][ID];//002
+
+	//float N0 = vNormal[ID][0];
+	//float N1 = vNormal[ID][1];
+	//float N2 = vNormal[ID][2];
+
+
+
+	tcPnPatch[ID].b210 = (2.0f * P0 + P1 - wij(0, 1) * N0) / 3.0f;
+	tcPnPatch[ID].b120 = (2.0f * P1 + P0 - wij(1, 0) * N1) / 3.0f;
+	tcPnPatch[ID].b021 = (2.0f * P1 + P2 - wij(1, 2) * N1) / 3.0f;
+	tcPnPatch[ID].b012 = (2.0f * P2 + P1 - wij(2, 1) * N2) / 3.0f;
+	tcPnPatch[ID].b102 = (2.0f * P2 + P0 - wij(2, 0) * N2) / 3.0f;
+	tcPnPatch[ID].b201 = (2.0f * P0 + P2 - wij(0, 2) * N0) / 3.0f;
+
+	float E = (tcPnPatch[ID].b210 + tcPnPatch[ID].b120 + tcPnPatch[ID].b021 + tcPnPatch[ID].b012 + tcPnPatch[ID].b102 + tcPnPatch[ID].b201) / 6.0f;
+
+	float V = (P0 + P1 + P2 ) / 3.0f;
+
+	tcPnPatch[ID].b111 = E + (E - V) * 0.5f;
+	tcPnPatch[ID].n110 = N0 + N1 - vij(0, 1) * (P1 - P0);
+	tcPnPatch[ID].n011 = N1 + N2 - vij(1, 2) * (P2 - P1);
+	tcPnPatch[ID].n101 = N2 + N0 - vij(2, 0) * (P0 - P2);
+
+
+
+	tcPosition[ID] = vPosition[ID];
+	tcNormal[ID] = vNormal[ID];
+
+	tcTexCoord[ID] = vTexCoord[ID];
+	
+
+
+	// LoD add here
+	
+    gl_TessLevelOuter[0] = tess;
+	gl_TessLevelOuter[1] = tess;
+	gl_TessLevelOuter[2] = tess;
+
+	gl_TessLevelInner[0] = tess;
+	
+
+
+}

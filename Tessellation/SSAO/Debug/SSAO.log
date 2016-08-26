@@ -1,0 +1,41 @@
+﻿Build started 8/25/2016 3:23:42 PM.
+     1>Project "E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\SSAO\SSAO.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\Include /I..\Tessellation /I..\TessellationTerrian /I"D:\Thesis\Opengl\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\TessMesh" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\loadmesh.h(157): warning C4018: '<': signed/unsigned mismatch
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\loadmesh.h(181): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\loadmesh.h(182): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\loadmesh.h(183): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(233): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(259): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(264): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(387): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(388): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(628): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(629): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(633): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(634): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(636): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(637): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\ssao\main.cpp(675): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+       Link:
+         D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\SSAO.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\Lib freeglutd.lib glew32.lib "assimp-vc130-mtd.lib" opengl32.lib glfw3.lib SOIL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG:FASTLINK /PDB:"E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\SSAO.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\SSAO.lib" /MACHINE:X86 Debug\main.obj
+     1>glfw3.lib(context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(context.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(init.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(init.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(input.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(input.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(monitor.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(monitor.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(window.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(window.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(win32_init.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_init.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(win32_monitor.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_monitor.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(win32_time.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_time.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(win32_tls.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_tls.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(win32_window.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(win32_window.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(winmm_joystick.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(winmm_joystick.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+     1>glfw3.lib(wgl_context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(wgl_context.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
+         SSAO.vcxproj -> E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\SSAO.exe
+     1>Done Building Project "E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\SSAO\SSAO.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:06.16

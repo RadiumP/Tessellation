@@ -1,0 +1,5 @@
+﻿  Building Custom Rule D:/Thesis/Opengl/Tessellation/Tessellation/freeglut-3.0.0/freeglut-3.0.0/CMakeLists.txt
+  CMake does not need to re-run because D:\Thesis\Opengl\Tessellation\Tessellation\freeglut-3.0.0\freeglut-3.0.0\CMakeFiles\generate.stamp is up-to-date.
+  smooth_opengl3.c
+  smooth_opengl3_static.vcxproj -> D:\Thesis\Opengl\Tessellation\Tessellation\freeglut-3.0.0\freeglut-3.0.0\bin\Debug\smooth_opengl3_staticd.exe
+  smooth_opengl3_static.vcxproj -> D:/Thesis/Opengl/Tessellation/Tessellation/freeglut-3.0.0/freeglut-3.0.0/bin/Debug/smooth_opengl3_staticd.pdb (Full PDB)

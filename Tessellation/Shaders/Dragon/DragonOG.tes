@@ -1,0 +1,40 @@
+#version 440 core
+
+
+
+layout(triangles, equal_spacing, cw) in;
+
+
+uniform sampler2D texture1;
+//uniform float disFactor;
+
+
+in vec3 tcPosition[];
+in vec3 tcNormal[];
+in vec2 tcTexCoord[];
+
+
+
+out vec3 tePosition;
+out vec3 teNormal;
+out vec2 teTexCoord;
+out vec3 tePatchDistance;
+
+
+
+uniform mat4 projection;
+uniform mat4 model;
+uniform mat4 view;
+
+
+
+void main()
+{
+   
+	tePosition = tcPosition[0] * gl_TessCoord.x + tcPosition[1] * gl_TessCoord.y + tcPosition[2] * gl_TessCoord.z; 
+    teNormal = tcNormal[0] * gl_TessCoord.x + tcNormal[1] * gl_TessCoord.y + tcNormal[2] * gl_TessCoord.z;
+    teTexCoord = tcTexCoord[0] * gl_TessCoord.x + tcTexCoord[1] * gl_TessCoord.y + tcTexCoord[2] * gl_TessCoord.z;
+    gl_Position = projection * view * model * vec4(tePosition, 1.0);
+    tePatchDistance = gl_TessCoord;;
+
+}

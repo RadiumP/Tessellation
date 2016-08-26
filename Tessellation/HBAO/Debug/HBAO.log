@@ -1,0 +1,19 @@
+﻿  Surface.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\Surface.cpp': No such file or directory
+  Shader.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\Shader.cpp': No such file or directory
+  ObjLoader.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\ObjLoader.cpp': No such file or directory
+  MtlLoader.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\MtlLoader.cpp': No such file or directory
+  main.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\main.cpp': No such file or directory
+  Log.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\Log.cpp': No such file or directory
+  Geometry.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\Geometry.cpp': No such file or directory
+  Framebuffer2D.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\Framebuffer2D.cpp': No such file or directory
+  Camera.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\..\..\hbao-master-2016-04-12\hbao-master\hbao-master\src\Camera.cpp': No such file or directory
+  Generating Code...

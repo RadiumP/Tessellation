@@ -1,0 +1,90 @@
+#version 440 core
+
+//Phong patch
+struct PhongPatch
+{
+    float termIJ;
+    float termJK;
+    float termIK;
+};
+
+
+
+layout(triangles, equal_spacing, ccw) in;
+
+
+
+uniform sampler2D texture1;
+//uniform float disFactor;
+
+in vec3 tcPosition[];
+in vec3 tcNormal[];
+in vec2 tcTexCoord[];
+in PhongPatch tcPhongPatch[];
+in float tcD[];
+
+out vec3 tePosition;
+out vec3 teNormal;
+out vec2 teTexCoord;
+out vec3 tePatchDistance;
+out float teD;
+
+uniform mat4 projection;
+uniform mat4 model;
+uniform mat4 view;
+
+
+
+void main()
+{
+    
+
+    vec3 Pi = tcPosition[0];
+    vec3 Pj = tcPosition[1];
+    vec3 Pk = tcPosition[2];
+    
+    vec3 tc1 = gl_TessCoord;
+    vec3 tc2 = gl_TessCoord * gl_TessCoord;
+
+    teTexCoord = gl_TessCoord[0] * tcTexCoord[0] + gl_TessCoord[1] * tcTexCoord[1] + gl_TessCoord[2] * tcTexCoord[2];
+   
+    teNormal = gl_TessCoord[0] * tcNormal[0] + gl_TessCoord[1] * tcNormal[1] + gl_TessCoord[2] * tcNormal[2];
+
+    //normal mat
+    //mat4 norMat = inverse(model);
+    
+    //teNormal = (norMat * vec4(teNormal, 0.0)).xyz; // reason?
+
+
+    //interpolated pos
+    vec3 barPos = gl_TessCoord[0] * Pi + gl_TessCoord[1] * Pj + gl_TessCoord[2] * Pk;
+
+    //terms
+    vec3 termIJ = vec3(tcPhongPatch[0].termIJ, tcPhongPatch[1].termIJ, tcPhongPatch[2].termIJ);
+    vec3 termJK = vec3(tcPhongPatch[0].termJK, tcPhongPatch[1].termJK, tcPhongPatch[2].termJK);
+    vec3 termIK = vec3(tcPhongPatch[0].termIK, tcPhongPatch[1].termIK, tcPhongPatch[2].termIK);
+
+    //phong tess pos
+    vec3 phongPos = tc2[0] * Pi + tc2[1] * Pj + tc2[2] * Pk  + tc1[0] * tc1[1] * termIJ + tc1[1] * tc1[2] * termJK + tc1[2] * tc1[0] * termIK;
+
+    float uTessAlpha = 1.0;
+    
+    vec3 finalPos = (1.0 - uTessAlpha) * barPos + uTessAlpha * phongPos;
+
+
+	
+
+
+	//displacement
+	//float displacement = texture(texture1, teTexCoord).x;
+	//tmpPosition += teNormal * displacement * 0.1;// dispFactor
+	
+
+	
+    
+
+    gl_Position = projection  * vec4(finalPos, 1.0);
+    tePosition = vec3(vec4(finalPos, 1.0)).xyz;
+    tePatchDistance = gl_TessCoord;
+
+}

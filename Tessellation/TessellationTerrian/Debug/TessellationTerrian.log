@@ -1,0 +1,35 @@
+﻿Build started 8/26/2016 12:22:32 AM.
+     1>Project "E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\TessellationTerrian\TessellationTerrian.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\Include /I..\Tessellation /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Terrian.cpp
+         Terrian.cpp
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(21): error C2664: 'Shader::Shader(Shader &&)': cannot convert argument 1 from 'const char [8]' to 'const Shader &'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(21): note: Reason: cannot convert from 'const char [8]' to 'const Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(21): note: No constructor could take the source type, or constructor overload resolution was ambiguous
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(28): error C2039: 'attach': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(29): error C2039: 'attach': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(30): error C2039: 'attach': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(31): error C2039: 'attach': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(32): error C2039: 'attach': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(33): error C2039: 'link': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(41): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(41): warning C4305: 'initializing': truncation from 'double' to 'float'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(68): error C2039: 'begin': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(69): error C2039: 'setUniformMatrix4fv': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(70): error C2039: 'setUniformMatrix4fv': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellationterrian\terrian.cpp(73): error C2039: 'end': is not a member of 'Shader'
+         e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\shader.h(12): note: see declaration of 'Shader'
+     1>Done Building Project "E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\TessellationTerrian\TessellationTerrian.vcxproj" (Build target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.58

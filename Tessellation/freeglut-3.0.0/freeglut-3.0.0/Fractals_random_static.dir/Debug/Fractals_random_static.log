@@ -1,0 +1,5 @@
+﻿  Building Custom Rule D:/Thesis/Opengl/Tessellation/Tessellation/freeglut-3.0.0/freeglut-3.0.0/CMakeLists.txt
+  CMake does not need to re-run because D:\Thesis\Opengl\Tessellation\Tessellation\freeglut-3.0.0\freeglut-3.0.0\CMakeFiles\generate.stamp is up-to-date.
+  fractals_random.c
+  Fractals_random_static.vcxproj -> D:\Thesis\Opengl\Tessellation\Tessellation\freeglut-3.0.0\freeglut-3.0.0\bin\Debug\Fractals_random_staticd.exe
+  Fractals_random_static.vcxproj -> D:/Thesis/Opengl/Tessellation/Tessellation/freeglut-3.0.0/freeglut-3.0.0/bin/Debug/Fractals_random_staticd.pdb (Full PDB)

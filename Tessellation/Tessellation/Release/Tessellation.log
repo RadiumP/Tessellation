@@ -1,0 +1,13 @@
+﻿  LoadMesh.cpp
+  Source.cpp
+d:\thesis\opengl\tessellation\tessellation\tessellation\Shader.h(58): warning C4018: '<': signed/unsigned mismatch
+d:\thesis\opengl\tessellation\tessellation\tessellation\Shader.h(115): warning C4473: 'printf' : not enough arguments passed for format string
+  d:\thesis\opengl\tessellation\tessellation\tessellation\Shader.h(115): note: placeholders and their parameters expect 1 variadic arguments, but 0 were provided
+  d:\thesis\opengl\tessellation\tessellation\tessellation\Shader.h(115): note: the missing variadic argument 1 is required by format string '%s'
+Source.cpp(48): warning C4838: conversion from 'double' to 'float' requires a narrowing conversion
+Source.cpp(48): warning C4305: 'initializing': truncation from 'double' to 'float'
+  Generating code
+  All 167 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Tessellation.vcxproj -> D:\Thesis\Opengl\Tessellation\Tessellation\Release\Tessellation.exe
+  Tessellation.vcxproj -> D:\Thesis\Opengl\Tessellation\Tessellation\Release\Tessellation.pdb (Full PDB)
