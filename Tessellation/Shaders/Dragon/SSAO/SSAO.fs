@@ -39,7 +39,7 @@ void main()
 		offset.xyz /= offset.w;
 		offset.xyz = offset.xyz * 0.5 + 0.5;
 
-		float sampleDepth = -texture(gPositionDepth, offset.xy).w * 50.0f ;
+		float sampleDepth = -texture(gPositionDepth, offset.xy).w ;
 
 		float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
 		occlusion += (sampleDepth >= samp.z ? 1.0 : 0.0) * rangeCheck;

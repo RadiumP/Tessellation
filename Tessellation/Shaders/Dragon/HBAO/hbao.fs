@@ -5,7 +5,7 @@
 const float PI = 3.14159265;
 
 uniform sampler2D gPositionDepth;
-uniform sampler2D gNormal;
+uniform sampler2D gNormal;//reconstruct
 uniform sampler2D texNoise;
 
 
@@ -22,9 +22,9 @@ const vec2 AORes = vec2(800.0,600.0);
 const vec2 InvAORes = vec2(1.0f/800.0f, 1.0f/600.0f);
 
 const float AOStrength = 1.9;
-const float R = 0.3;
-const float R2 = 0.3 * 0.3;
-const float NegInvR2 = -1.0 / (0.3 * 0.3);
+const float R = 1.0;
+const float R2 = 1.0 * 1.0;
+const float NegInvR2 = -1.0 / (1.0 * 1.0);
 const float TanBias = tan (45.0 * PI / 180.0);
 const float MaxRadiusPixels = 100.0;
 

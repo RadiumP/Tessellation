@@ -90,18 +90,21 @@ int main()
 	//Shader shaderGeometryPass("../Shaders/Dragon/SSAO/geoSSAO.vs", "../Shaders/Dragon/SSAO/geoSSAO.fs");
 	//Shader hbaoGeometryPass("../Shaders/Dragon/HBAO/tessgeoSSAO.vs", "../Shaders/Dragon/HBAO/tessgeoSSAO.fs", "../Shaders/Dragon/HBAO/geoSSAO.tcs", "../Shaders/Dragon/HBAO/geoSSAO.tes");
 
-	Shader shaderLightingPass("../Shaders/Dragon/SSAO/SSAO.vs", "../Shaders/Dragon/SSAO/ssaoLight.fs");
+	//Shader shaderLightingPass("../Shaders/Dragon/SSAO/SSAO.vs", "../Shaders/Dragon/SSAO/ssaoLight.fs");
 	Shader shaderSSAO("../Shaders/Dragon/SSAO/SSAO.vs", "../Shaders/Dragon/SSAO/SSAO.fs");
 	Shader shaderHBAO("../Shaders/Dragon/HBAO/hbao.vs", "../Shaders/Dragon/HBAO/hbao.fs");
+	//Shader shaderHBAOPlus
+	//Shader shaderDeinter
+	//Shader shaderPlusBlur
 	Shader shaderSSAOBlur("../Shaders/Dragon/SSAO/SSAO.vs", "../Shaders/Dragon/SSAO/ssaoBlur.fs");
 
-	// Set samplers
-	shaderLightingPass.Use();
-	glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "gPositionDepth"), 0);
-	glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "gNormal"), 1);
-	glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "gAlbedo"), 2);
-	glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "ssao"), 3);
-	
+	//// Set samplers
+	//shaderLightingPass.Use();
+	//glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "gPositionDepth"), 0);
+	//glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "gNormal"), 1);
+	//glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "gAlbedo"), 2);
+	//glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "ssao"), 3);
+	//
 		shaderSSAO.Use();
 		glUniform1i(glGetUniformLocation(shaderSSAO.Program, "gPositionDepth"), 0);
 		glUniform1i(glGetUniformLocation(shaderSSAO.Program, "gNormal"), 1);
@@ -140,9 +143,9 @@ int main()
 	
 	
 	
-	//Model myObj("../Obj/nanosuit/nanosuit.obj");
-	Model myObj("../Obj/bunny/bunny3.obj");
-	//Model myObj("../Obj/icosa.obj");
+	Model myObj("../Obj/nanosuit/nanosuit.obj");
+	//Model myObj("../Obj/bunny/bunny3.obj");
+	//Model myObj("../Obj/luffy.obj");
 
 
 
@@ -255,7 +258,7 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 
-	glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+	
 	GLfloat lastTime = glfwGetTime();
 	// Game loop
 	while (!glfwWindowShouldClose(window))
@@ -282,6 +285,7 @@ int main()
 
 		// 1. Geometry Pass: render scene's geometry/color data into gbuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		mat4 projection = perspective(camera.Zoom, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 50.0f);
 		mat4 view = camera.GetViewMatrix();
@@ -290,7 +294,7 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(shaderGeometryPass.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 		glUniformMatrix4fv(glGetUniformLocation(shaderGeometryPass.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniform1f(glGetUniformLocation(shaderGeometryPass.Program, "tess"), tessLevel);
-		//RenderCube();
+		
 		
 		model = glm::mat4();
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 4.0));
@@ -369,26 +373,26 @@ int main()
 
 		// 4. Lighting Pass: traditional deferred Blinn-Phong lighting now with added screen-space ambient occlusion
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		shaderLightingPass.Use();
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, gPositionDepth);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, gNormal);
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, gAlbedo);
-		glActiveTexture(GL_TEXTURE3); // Add extra SSAO texture to lighting pass
-		glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
-		// Also send light relevant uniforms
-		glm::vec3 lightPosView = glm::vec3(camera.GetViewMatrix() * glm::vec4(lightPos, 1.0));
-		glUniform3fv(glGetUniformLocation(shaderLightingPass.Program, "light.Position"), 1, &lightPosView[0]);
-		glUniform3fv(glGetUniformLocation(shaderLightingPass.Program, "light.Color"), 1, &lightColor[0]);
-		// Update attenuation parameters
-		const GLfloat constant = 1.0; // Note that we don't send this to the shader, we assume it is always 1.0 (in our case)
-		const GLfloat linear = 0.09;
-		const GLfloat quadratic = 0.032;
-		glUniform1f(glGetUniformLocation(shaderLightingPass.Program, "light.Linear"), linear);
-		glUniform1f(glGetUniformLocation(shaderLightingPass.Program, "light.Quadratic"), quadratic);
-		glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "draw_mode"), draw_mode);
+		//shaderLightingPass.Use();
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_2D, gPositionDepth);
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_2D, gNormal);
+		//glActiveTexture(GL_TEXTURE2);
+		//glBindTexture(GL_TEXTURE_2D, gAlbedo);
+		//glActiveTexture(GL_TEXTURE3); // Add extra SSAO texture to lighting pass
+		//glBindTexture(GL_TEXTURE_2D, ssaoColorBufferBlur);
+		//// Also send light relevant uniforms
+		//glm::vec3 lightPosView = glm::vec3(camera.GetViewMatrix() * glm::vec4(lightPos, 1.0));
+		//glUniform3fv(glGetUniformLocation(shaderLightingPass.Program, "light.Position"), 1, &lightPosView[0]);
+		//glUniform3fv(glGetUniformLocation(shaderLightingPass.Program, "light.Color"), 1, &lightColor[0]);
+		//// Update attenuation parameters
+		//const GLfloat constant = 1.0; // Note that we don't send this to the shader, we assume it is always 1.0 (in our case)
+		//const GLfloat linear = 0.09;
+		//const GLfloat quadratic = 0.032;
+		//glUniform1f(glGetUniformLocation(shaderLightingPass.Program, "light.Linear"), linear);
+		//glUniform1f(glGetUniformLocation(shaderLightingPass.Program, "light.Quadratic"), quadratic);
+		//glUniform1i(glGetUniformLocation(shaderLightingPass.Program, "draw_mode"), draw_mode);
 		RenderQuad();
 
 
