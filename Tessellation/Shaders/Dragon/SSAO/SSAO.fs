@@ -15,14 +15,21 @@ uniform vec3 samples[64];
 int kernelSize = 64;
 float radius = 1.0;
 
-const vec2 noiseScale = vec2(800.0f/4.0f, 600.0f/4.0f);
+const vec2 noiseScale = vec2(1920.0f/4.0f, 1080.0f/4.0f);
+const float fov = 45.0;
+const float PI = 3.14159265;
+
+uniform vec2 UVToViewA;
+uniform vec2 UVToViewB;
+
 
 
 void main()
 {
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
-	vec3 normal = texture(gNormal, TexCoords).rgb;
-	vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz;
+	//vec3 fragPos = texture(gPositionDepth, TexCoords).xyz
+	vec3 normal = texture(gNormal, TexCoords).rgb ;
+	vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz ;
 
 	vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
 	vec3 bitangent = cross(normal, tangent);
@@ -42,6 +49,7 @@ void main()
 		float sampleDepth = -texture(gPositionDepth, offset.xy).w ;
 
 		float rangeCheck = smoothstep(0.0, 1.0, radius / abs(fragPos.z - sampleDepth));
+
 		occlusion += (sampleDepth >= samp.z ? 1.0 : 0.0) * rangeCheck;
 	}
 	occlusion = 1.0 - (occlusion / kernelSize);

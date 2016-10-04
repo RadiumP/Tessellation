@@ -94,6 +94,9 @@ void main()
             mat3 normalMatrix = transpose(inverse(mat3(view * model)));
     		teNormal = normalMatrix * tempNormal;
 
+            //teNormal = tempNormal;
+
+
             gl_Position = projection * view * model * vec4( xyz, 1. );
             tePosition = (view * model * vec4( xyz, 1. )).xyz;
             tePatchDistance = gl_TessCoord;

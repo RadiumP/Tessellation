@@ -20,12 +20,12 @@ using namespace std;
 
 GLint TextureFromFile(const char* path, string directory);
 
-class Model
+class oModel
 {
 public:
 	/*  Functions   */
 	// Constructor, expects a filepath to a 3D model.
-	Model(GLchar* path)
+	oModel(GLchar* path)
 	{
 		this->loadModel(path);
 	}

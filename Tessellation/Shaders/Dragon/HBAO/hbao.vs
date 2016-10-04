@@ -13,4 +13,5 @@ void main()
     gl_Position = vec4(Position, 1.0f);
     vTexCoords = texCoord;
     //vPosition = texCoord * vec2(2.0, -2.0) + vec2(-1.0, 1.0);
+    //gl_Position = vec4(vPostition, 0.0, 1.0);
 }

@@ -19,9 +19,10 @@ using namespace glm;
 #include "Shader.h"
 #include "Camera.h"
 #include "LoadMesh.h"
+#include "Model.h"
 
 
-GLuint screenWidth = 800, screenHeight = 600;
+GLuint screenWidth = 1920, screenHeight = 1080;
 
 //  Number of frames per second
 float fps = 0;
@@ -42,7 +43,7 @@ void RenderQuad();
 //noise texture
 void generateNoiseTex(int width, int height);
 vec3 lightPos(1.2f, 1.0f, 2.0f);
-Camera camera(vec3(0.0f, 0.0f, 5.0f));
+Camera camera(vec3(-4.0f, 0.0f, -4.0f));
 GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
 
@@ -56,6 +57,40 @@ GLuint draw_mode = 1;
 GLfloat lerp(GLfloat a, GLfloat b, GLfloat f)
 {
 	return a + f * (b - a);
+}
+
+
+void generateNoiseTex(int width, int height)
+{
+	//float *noise = new float[width*height ];
+	float *noise = new float[width*height * 4];
+	for (int y = 0; y < height; ++y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			vec2 xy = glm::circularRand(1.0f);
+			float z = glm::linearRand(0.0f, 1.0f);
+			float w = glm::linearRand(0.0f, 1.0f);
+
+			int offset = 4 *(y*width + x);
+			//int offset = 4 * (y*width + x);
+			noise[offset + 0] = xy[0] ;
+			noise[offset + 1] = xy[1] ;
+			noise[offset + 2] = z;
+			noise[offset + 3] = w;
+		}
+	}
+
+	GLint internalFormat = GL_RGBA16F;
+	GLint format = GL_RGBA;
+	GLint type = GL_FLOAT;
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, noise);
 }
 
 int main()
@@ -92,7 +127,7 @@ int main()
 
 	//Shader shaderLightingPass("../Shaders/Dragon/SSAO/SSAO.vs", "../Shaders/Dragon/SSAO/ssaoLight.fs");
 	Shader shaderSSAO("../Shaders/Dragon/SSAO/SSAO.vs", "../Shaders/Dragon/SSAO/SSAO.fs");
-	Shader shaderHBAO("../Shaders/Dragon/HBAO/hbao.vs", "../Shaders/Dragon/HBAO/hbao.fs");
+	Shader shaderHBAO("../Shaders/Dragon/HBAO/hbao.vs", "../Shaders/Dragon/HBAO/hbao1.fs");
 	//Shader shaderHBAOPlus
 	//Shader shaderDeinter
 	//Shader shaderPlusBlur
@@ -109,7 +144,7 @@ int main()
 		glUniform1i(glGetUniformLocation(shaderSSAO.Program, "gPositionDepth"), 0);
 		glUniform1i(glGetUniformLocation(shaderSSAO.Program, "gNormal"), 1);
 		glUniform1i(glGetUniformLocation(shaderSSAO.Program, "texNoise"), 2);
-	
+		
 		float fovRad = radians(camera.Zoom);
 		vec2 FocalLen, InvFocalLen, UVToViewA, UVToViewB, LinMAD;
 		vec4 projInfo;
@@ -131,11 +166,16 @@ int main()
 		LinMAD[0] = (nearPlane - farPlane) / (2.0f * nearPlane * farPlane);
 		LinMAD[1] = (nearPlane + farPlane) / (2.0f * nearPlane * farPlane);
 
+		glUniform2f(glGetUniformLocation(shaderSSAO.Program, "UVToViewA"), UVToViewA[0], UVToViewA[1]);
+		glUniform2f(glGetUniformLocation(shaderSSAO.Program, "UVToViewB"), UVToViewB[0], UVToViewB[1]);
+
+
 
 		shaderHBAO.Use();
 		glUniform1i(glGetUniformLocation(shaderHBAO.Program, "gPositionDepth"), 0);
 		glUniform1i(glGetUniformLocation(shaderHBAO.Program, "gNormal"), 1);
 		glUniform1i(glGetUniformLocation(shaderHBAO.Program, "texNoise"), 2);
+		glUniform1i(glGetUniformLocation(shaderHBAO.Program, "depthTex"), 3);
 		glUniform2f(glGetUniformLocation(shaderHBAO.Program, "FocalLen"), FocalLen[0], FocalLen[1]);
 		glUniform2f(glGetUniformLocation(shaderHBAO.Program, "UVToViewA"), UVToViewA[0], UVToViewA[1]);
 		glUniform2f(glGetUniformLocation(shaderHBAO.Program, "UVToViewB"), UVToViewB[0], UVToViewB[1]);
@@ -143,10 +183,11 @@ int main()
 	
 	
 	
-	Model myObj("../Obj/nanosuit/nanosuit.obj");
-	//Model myObj("../Obj/bunny/bunny3.obj");
-	//Model myObj("../Obj/luffy.obj");
+	Model myObj1("../Obj/nanosuit/nanosuit.obj");
+		Model myObj("../Obj/myDragon.obj");
+	//Model myObj1("../Obj/siben.obj");
 
+	
 
 
 	vec3 lightPos = vec3(2.0, 4.0, -2.0);
@@ -155,7 +196,7 @@ int main()
 	GLuint gBuffer;
 	glGenFramebuffers(1, &gBuffer);
 	glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
-	GLuint gPositionDepth, gNormal, gAlbedo;
+	GLuint gPositionDepth, gNormal, gAlbedo, gDepth;
 	//pos
 	glGenTextures(1, &gPositionDepth);
 	glBindTexture(GL_TEXTURE_2D, gPositionDepth);
@@ -182,6 +223,8 @@ int main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, gAlbedo, 0);
 
+
+
 	// - Tell OpenGL which color attachments we'll use (of this framebuffer) for rendering 
 	GLuint attachments[3] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 };
 	glDrawBuffers(3, attachments);
@@ -196,6 +239,7 @@ int main()
 	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
 		std::cout << "GBuffer Framebuffer not complete!" << std::endl;
 
+	
 	// Also create framebuffer to hold SSAO processing stage 
 	GLuint ssaoFBO, ssaoBlurFBO;
 	glGenFramebuffers(1, &ssaoFBO);  glGenFramebuffers(1, &ssaoBlurFBO);
@@ -251,12 +295,15 @@ int main()
 	}
 	GLuint noiseTexture; glGenTextures(1, &noiseTexture);
 	glBindTexture(GL_TEXTURE_2D, noiseTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+	generateNoiseTex(4, 4);
+	
+	
+	/*glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
+*/
 
 	
 	GLfloat lastTime = glfwGetTime();
@@ -285,9 +332,13 @@ int main()
 
 		// 1. Geometry Pass: render scene's geometry/color data into gbuffer
 		glBindFramebuffer(GL_FRAMEBUFFER, gBuffer);
+
+		//vec4  bgColor(0.0, 0.0, 0.0, 0.0);
+		//glClearBufferfv(GL_COLOR, 0, &bgColor.x);
+		//glClearDepth(1.0);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		mat4 projection = perspective(camera.Zoom, (GLfloat)screenWidth / (GLfloat)screenHeight, 0.1f, 50.0f);
+		mat4 projection = perspective(camera.Zoom, (GLfloat)screenWidth / (GLfloat)screenHeight, 1.0f, 2000.0f);
 		mat4 view = camera.GetViewMatrix();
 		mat4 model;
 		shaderGeometryPass.Use();
@@ -295,10 +346,19 @@ int main()
 		glUniformMatrix4fv(glGetUniformLocation(shaderGeometryPass.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniform1f(glGetUniformLocation(shaderGeometryPass.Program, "tess"), tessLevel);
 		
+
+
+		model = glm::mat4();
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0));
+		model = glm::rotate(model, 0.0f, glm::vec3(1.0, 0.0, 0.0));
+		model = glm::scale(model, glm::vec3(1.0f));
+		glUniformMatrix4fv(glGetUniformLocation(shaderGeometryPass.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+		myObj1.Draw(shaderGeometryPass);
+
 		
 		model = glm::mat4();
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 4.0));
-		model = glm::rotate(model, -0.0f, glm::vec3(1.0, 0.0, 0.0));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0));
+		model = glm::rotate(model, 0.0f, glm::vec3(1.0, 0.0, 0.0));
 		model = glm::scale(model, glm::vec3(1.0f));
 		glUniformMatrix4fv(glGetUniformLocation(shaderGeometryPass.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		myObj.Draw(shaderGeometryPass);
@@ -307,8 +367,10 @@ int main()
 
 		// 2. Create SSAO texture
 		glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 		
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		//if (type == 0){
 		//shaderSSAO.Use(); 
@@ -337,6 +399,9 @@ int main()
 			for (GLuint i = 0; i < 64; ++i)
 				glUniform3fv(glGetUniformLocation(shaderSSAO.Program, ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
 			glUniformMatrix4fv(glGetUniformLocation(shaderSSAO.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+			glUniformMatrix4fv(glGetUniformLocation(shaderGeometryPass.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
+			glUniformMatrix4fv(glGetUniformLocation(shaderGeometryPass.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
+			
 
 
 			//shaderHBAO.Use();
@@ -347,7 +412,7 @@ int main()
 		else if (type == 1)
 		{
 			shaderHBAO.Use();
-
+			glUniformMatrix4fv(glGetUniformLocation(shaderHBAO.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 			RenderQuad();
 		}
 		else if (type == 2)
@@ -361,8 +426,10 @@ int main()
 
 		// 3. Blur SSAO texture to remove noise
 		glBindFramebuffer(GL_FRAMEBUFFER, ssaoBlurFBO);
-		glClear(GL_COLOR_BUFFER_BIT);
+		//glClear(GL_COLOR_BUFFER_BIT);
 		
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
 

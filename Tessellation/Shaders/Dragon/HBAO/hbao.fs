@@ -17,21 +17,20 @@ uniform vec2 UVToViewB;
 
 uniform vec2 LinMAD;
 
-const vec2 noiseScale = vec2(800.0f/4.0f, 600.0f/4.0f);
-const vec2 AORes = vec2(800.0,600.0);
-const vec2 InvAORes = vec2(1.0f/800.0f, 1.0f/600.0f);
+const vec2 noiseScale = vec2(1920.0f/4.0f, 1080.0f/4.0f);
+const vec2 AORes = vec2(1920.0,1080.0);
+const vec2 InvAORes = vec2(1.0f/1920.0f, 1.0f/1080.0f);
 
-const float AOStrength = 1.9;
+const float AOStrength = 1.2;
 const float R = 1.0;
 const float R2 = 1.0 * 1.0;
 const float NegInvR2 = -1.0 / (1.0 * 1.0);
-const float TanBias = tan (45.0 * PI / 180.0);
+const float TanBias = tan (30.0 * PI / 180.0);
 const float MaxRadiusPixels = 100.0;
 
-const int NumDirections = 6;
-const int NumSamples = 4;
-const float far = 50.0f;
-const float near = 0.1f;
+const int NumDirections = 16;
+const int NumSamples = 16;
+
 
 in vec2 vTexCoords;
 //in vec2 vPosition;
@@ -229,7 +228,7 @@ void main()
 	//out_frag0 = vec2(ao, 30.0 * P.z);
 	//FragColor = ao;
 	//FragColor = texture(gPositionDepth, vTexCoords).xy;
-	FragColor = vec2(ao, 30.0 * P.z);
+	FragColor = vec2(ao, ao);
 }
 
 
