@@ -22,7 +22,7 @@ void main()
    
   	vPosition = Position;
    
-    vNormal = Normal;
+    vNormal = normalize(Normal);
     
    
 }

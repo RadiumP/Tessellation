@@ -22,5 +22,6 @@ void main()
  
    fragColor = vec4(result / float(blurSize * blurSize));
    //fragColor = vec4(1.0, 0.0, 0.0, 0.0);
+   fragColor = vec4(texture(ssaoInput, TexCoords).r);
 
 }

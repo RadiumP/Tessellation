@@ -16,26 +16,46 @@ uniform vec3 samples[64];
 int kernelSize = 64;
 float radius = 1.0;
 
+const float near = 1.0f; // Projection matrix's near plane distance
+const float far = 2000.0f; // Projection matrix's far plane distance
 const vec2 noiseScale = vec2(1920.0f/4.0f, 1080.0f/4.0f);
 const float fov = 45.0;
 const float PI = 3.14159265;
 
-vec3 getViewRay(vec2 tc) {
-		// float hfar = 2.0 * tan(fov/2.0) * far;
-		// float wfar = hfar * aspectRatio;    
-		// vec3 ray = vec3(wfar * (tc.x - 0.5), hfar * (tc.y - 0.5), -far);    
-		// return ray;  
+		float LinearizeDepth(float depth)
+{
+   // float z = depth * 2.0 - 1.0; // Back to NDC 
+   // return (2.0 * NEAR * FAR) / (FAR + NEAR - z * (FAR - NEAR)); ??
+    float z = depth;// * 2.0 - 1.0; // Back to NDC 
+    return (near * far) / (far  - z * (far - near));    	
+}
 
-		float hfar = 2.0 * tan(fov * PI / 180.0 /2.0) ;
-		float wfar = hfar * 1920.0 / 1080.0;    
-		vec3 ray = vec3(wfar * (tc.x - 0.5), hfar * (tc.y - 0.5), -1.0);    
-		return ray;                     
-	}       
+
+vec3 getViewRay(vec2 tc) {
+		 float hfar = 2.0 * tan(fov/2.0) * far;
+		 float wfar = hfar * (1920.0 / 1080.0);    
+		 vec3 ray = vec3(wfar * (tc.x - 0.5), hfar * (tc.y - 0.5), -far);    
+		 return ray;  
+              
+	} 
+
+	float unpackDepth(const in vec4 rgba_depth) {
+		const vec4 bit_shift = vec4(1.0/(256.0*256.0*256.0), 1.0/(256.0*256.0), 1.0/256.0, 1.0);
+		float depth = dot(rgba_depth, bit_shift);
+		return depth;
+	}    
+
+	float getDepth(vec2 coord) {                          
+		
+		return unpackDepth(texture2D(gPositionDepth, coord.xy));
+		
+	}    
+	      
 
 void main(){
 	vec2 screenPos = vec2(gl_FragCoord.x / 1920.0, gl_FragCoord.y / 1080.0);
-	screenPos = TexCoords;
-	float linearDepth = -texture(gPositionDepth,screenPos).w;
+	//screenPos = TexCoords;
+	float linearDepth = LinearizeDepth(getDepth(screenPos));
 
 
 	vec3 origin = getViewRay(screenPos) * linearDepth ;   
@@ -53,8 +73,8 @@ void main(){
 		    vec4 offset = projection * vec4(Sample, 1.0);		
 			offset.xy /= offset.w;
 			offset.xy = offset.xy * 0.5 + 0.5;        
-		    float sampleDepth = -Sample.z;// / far;
-			float depthBufferValue = -texture(gPositionDepth,offset.xy).w;				              
+		    float sampleDepth = -Sample.z / far;
+			float depthBufferValue = LinearizeDepth(getDepth(offset.xy)) / far;				              
 			float range_check = abs(linearDepth - depthBufferValue);
 			if (range_check < radius && depthBufferValue <= sampleDepth) {
 				occlusion +=  1.0;

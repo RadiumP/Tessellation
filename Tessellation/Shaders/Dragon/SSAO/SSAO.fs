@@ -24,11 +24,20 @@ uniform vec2 UVToViewB;
 
 
 
+
+
+vec3 ReconstructNormal(vec2 UV, vec3 P)
+  {
+    return -normalize(cross(dFdy(P), dFdx(P)));
+  }
+
+
 void main()
 {
 	vec3 fragPos = texture(gPositionDepth, TexCoords).xyz;
-	//vec3 fragPos = texture(gPositionDepth, TexCoords).xyz
+	
 	vec3 normal = texture(gNormal, TexCoords).rgb ;
+	//vec3 normal = ReconstructNormal(TexCoords, fragPos);
 	vec3 randomVec = texture(texNoise, TexCoords * noiseScale).xyz ;
 
 	vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));
@@ -54,5 +63,6 @@ void main()
 	}
 	occlusion = 1.0 - (occlusion / kernelSize);
 	FragColor = occlusion;
+	
 	
 }

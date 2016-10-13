@@ -21,14 +21,25 @@ float LinearizeDepth(float depth)
     return (2.0 * NEAR * FAR) / (FAR  - z * (FAR - NEAR));    	
 }
 
+
+  vec3 ReconstructNormal(vec3 P)
+  {
+    return -normalize(cross(dFdy(P), dFdx(P)));
+  }
+
 void main()
 {    
     // Store the fragment position vector in the first gbuffer texture
     gPositionDepth.xyz = tePosition;;
     // And store linear depth into gPositionDepth's alpha component
-    gPositionDepth.a = LinearizeDepth(gl_FragCoord.z); // Divide by FAR if you need to store depth in range 0.0 - 1.0 (if not using floating point colorbuffer)
+    gPositionDepth.a = LinearizeDepth(gl_FragCoord.z); 
+    
+    //gPositionDepth = packDepth(gl_FragCoord.z);
+    // Divide by FAR if you need to store depth in range 0.0 - 1.0 (if not using floating point colorbuffer)
     // Also store the per-fragment normals into the gbuffer
-    gNormal = normalize(teNormal);
+    //gNormal = normalize(teNormal);
+
+     gNormal = normalize(ReconstructNormal(tePosition));
     // And the diffuse per-fragment color
     gAlbedoSpec.rgb = vec3(0.95); // Currently all objects have constant albedo color
 }

@@ -18,16 +18,18 @@ uniform vec2 FocalLen;
 uniform vec2 UVToViewA;
 uniform vec2 UVToViewB;
 
-const float NegInvR2 = -1.0f / (1.0f * 1.0f);
-const float R = 1.0f;
+const float NegInvR2 = -1.0f / (2.0f * 2.0f);
+const float R = 2.0f;
 const float fov = 45.0f;
 const vec2 noiseScale = vec2(1920.0f/4.0f, 1080.0f/4.0f);
 
 const float  NUM_STEPS = 16;
 const float  NUM_DIRECTIONS = 16; // texRandom/g_Jitter initialization depends on this
 const float  NDotVBias = 0.1;
+const float far = 2000.0;
+const float near = 1.0;
 
-const float AOMultiplier = 1.5;
+const float AOMultiplier = 1.2;
 const vec2 InvFullResolution = vec2(1.0f/1920.0f, 1.0f/1080.0f);
 in vec2 vTexCoords;
 in vec2 vPosition;
@@ -41,12 +43,20 @@ vec3 UVToView(vec2 uv, float z)
 	return vec3(uv * z, z);
 }
 
+vec3 getViewRay(vec2 tc) {
+    float hfar = 2.0 * tan(fov * PI /180.0 / 2.0) ;
+    float wfar = hfar * noiseScale.x / noiseScale.y;    
+    vec3 ray = vec3(wfar * (tc.x - 0.5), hfar * (tc.y - 0.5), -1.0);    
+    return ray ;                     
+  }   
+
 
 vec3 FetchViewPos(vec2 UV)
 {
   //float z = -texture(gPositionDepth, UV).w ; 
   //return UVToView(UV, z);
   return texture(gPositionDepth, UV).xyz; 
+  //return z * getViewRay(UV) ;
 }
 
 vec3 MinDiff(vec3 P, vec3 Pr, vec3 Pl)
@@ -56,7 +66,7 @@ vec3 MinDiff(vec3 P, vec3 Pr, vec3 Pl)
   return (dot(V1,V1) < dot(V2,V2)) ? V1 : V2;
 }
 
-vec3 ReconstructNormal(vec2 UV, vec3 P)
+vec3 reconstructNormal(vec2 UV, vec3 P)
 {
   vec3 Pr = FetchViewPos(UV + vec2(InvFullResolution.x, 0));
   vec3 Pl = FetchViewPos(UV + vec2(-InvFullResolution.x, 0));
@@ -65,6 +75,10 @@ vec3 ReconstructNormal(vec2 UV, vec3 P)
   return normalize(cross(MinDiff(P, Pr, Pl), MinDiff(P, Pt, Pb)));
 }
 
+vec3 ReconstructNormal(vec2 UV, vec3 P)
+  {
+    return -normalize(cross(dFdy(P), dFdx(P)));
+  }
 
 
 
@@ -91,11 +105,11 @@ vec2 RotateDirection(vec2 Dir, vec2 CosSin)
               Dir.x*CosSin.y + Dir.y*CosSin.x);
 }
 
-vec4 GetJitter()
+vec4 GetJitter(vec2 uv)
 {
 
   // (cos(Alpha),sin(Alpha),rand1,rand2)
-  return texture( texNoise, (gl_FragCoord.xy / AO_RANDOMTEX_SIZE));
+  return texture( texNoise, (uv * noiseScale));
 
   //return texture(texNoise, vTexCoords.xy * noiseScale);
 
@@ -139,13 +153,15 @@ void main()
   	vec3 ViewPosition = FetchViewPos(uv);
     
 
-  	//vec3 ViewNormal = ReconstructNormal(uv, ViewPosition);
+  	//vec3 ViewNormal = normalize(ReconstructNormal(uv, ViewPosition));
     vec3 ViewNormal = texture(gNormal, uv).xyz;
 
+    //vec3 ViewNormal = vec3(1.0);
   	float RadiusToScreen = R * 0.5f * 1080.0f / (tan(fov * PI/180.0f * 0.5f) * 2.0f);
   	float RadiusPixels = RadiusToScreen / (ViewPosition.z);
 
-  	vec4 Rand = GetJitter();
+  	vec4 Rand = GetJitter(uv);
+    //vec4 Rand = vec4(1.0);
 
   	float AO = ComputeCoarseAO(uv, RadiusPixels, Rand, ViewPosition, ViewNormal);
 
