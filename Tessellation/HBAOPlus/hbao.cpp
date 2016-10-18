@@ -367,6 +367,30 @@ int main()
 	//glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, textures.hbao2_resultarray, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+	// Noise texture
+	std::vector<glm::vec3> ssaoNoise;
+	for (GLuint i = 0; i < 16; i++)
+	{
+		//glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f);//ssao
+		glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator)); // rotate around z-axis (in tangent space)
+		ssaoNoise.push_back(noise);
+	}
+
+
+
+
+	GLuint noiseTexture;
+	glGenTextures(1, &noiseTexture);
+	glBindTexture(GL_TEXTURE_2D, noiseTexture);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, 4, 4, 0, GL_RGB, GL_FLOAT, &ssaoNoise[0]);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+
+
 
 	GLfloat lastTime = glfwGetTime();
 	// Main Game loop
@@ -411,6 +435,31 @@ int main()
 		hbaoData.NDotVBias = 0.1f;
 		hbaoData.AOMultiplier = 1.0f / (1.0f - hbaoData.NDotVBias);
 		
+
+		//ssao
+
+
+		// Sample kernel
+		std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
+		std::default_random_engine generator;
+		std::vector<glm::vec3> ssaoKernel;
+		for (GLuint i = 0; i < 64; ++i)
+		{
+			glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
+			sample = glm::normalize(sample);
+			sample *= randomFloats(generator);
+			GLfloat scale = GLfloat(i) / 64.0;
+
+			// Scale samples s.t. they're more aligned to center of kernel
+			scale = lerp(0.1f, 1.0f, scale * scale);
+			sample *= scale;
+			ssaoKernel.push_back(sample);
+		}
+
+
+	
+
+
 		//bind scene buffer
 		{
 			glBindFramebuffer(GL_FRAMEBUFFER, fbos.scene);
@@ -468,22 +517,6 @@ int main()
 			}
 			shaderSSAO.Use();
 
-			// Sample kernel
-			std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
-			std::default_random_engine generator;
-			std::vector<glm::vec3> ssaoKernel;
-			for (GLuint i = 0; i < 64; ++i)
-			{
-				glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0);
-				sample = glm::normalize(sample);
-				sample *= randomFloats(generator);
-				GLfloat scale = GLfloat(i) / 64.0;
-
-				// Scale samples s.t. they're more aligned to center of kernel
-				scale = lerp(0.1f, 1.0f, scale * scale);
-				sample *= scale;
-				ssaoKernel.push_back(sample);
-			}
 
 			for (GLuint i = 0; i < 64; ++i)
 				glUniform3fv(glGetUniformLocation(shaderSSAO.Program, ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
@@ -493,7 +526,7 @@ int main()
 			glUniform2fv(glGetUniformLocation(shaderSSAO.Program, "InvFullResolution"), 1, &hbaoData.InvFullResolution[0]);
 
 			glBindMultiTextureEXT(GL_TEXTURE0, GL_TEXTURE_2D, textures.scene_depthlinear);
-			glBindMultiTextureEXT(GL_TEXTURE1, GL_TEXTURE_2D, textures.hbao_randomview[0]);
+			glBindMultiTextureEXT(GL_TEXTURE1, GL_TEXTURE_2D, noiseTexture);
 
 			RenderQuad();
 

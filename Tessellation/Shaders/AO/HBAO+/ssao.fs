@@ -22,6 +22,8 @@ void outputColor(vec4 color) {
 }
 
 in vec2 texCoord;
+//in vec3 outNormal;
+
 
 vec3 UVToView(vec2 uv, float eye_z)
 {
@@ -57,13 +59,16 @@ vec3 ReconstructNormal(vec2 UV, vec3 P)
 void main()
 {	
 	vec2 uv = texCoord;
+	//vec2 uv = vec2 (gl_FragCoord.x/1920, gl_FragCoord.y/1080);
 	vec3 fragPos = FetchViewPos(uv);
 
 	vec3 normal = -ReconstructNormal(uv, fragPos);
 
-	//normal = normalize(normal * 2.0 -1.0);
+	
 
-	vec3 randomVec = texture(texRandom, uv * noiseScale).xyz;
+	//normal = normalize(normal * 0.5 + 0.5);
+
+	vec3 randomVec = texture(texRandom, uv * noiseScale).xyz; //* 2.0 - 1.0;
 
 	vec3 tangent = normalize(randomVec - normal * dot(randomVec, normal));	
 
@@ -81,14 +86,15 @@ void main()
 		offset = projection * offset;
 		offset.xy /= offset.w;
 		
-		offset.xy = (offset.xy * 0.5 + 0.5);
-	
+		offset.x = (-offset.x * 0.5 + 0.5);
+		offset.y = (-offset.y * 0.5 + 0.5);
+		
 		float sampleDepth = texture(texLinearDepth, offset.xy).r;
 
   
 		// range check & accumulate:
    		float rangeCheck= abs(fragPos.z - sampleDepth) < radius ? 1.0 : 0.0;
-   		occlusion += (sampleDepth >= samp.z ? 1.0 : 0.0) * rangeCheck;
+   		occlusion += (sampleDepth <= samp.z ? 1.0 : 0.0) * rangeCheck;
 	}
 	occlusion = 1.0 - (occlusion / kernelSize);
 	outputColor(vec4(occlusion));	
