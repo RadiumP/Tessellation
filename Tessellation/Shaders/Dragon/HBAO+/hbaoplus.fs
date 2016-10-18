@@ -28,7 +28,7 @@ vec2 getQuarterCoord(vec2 UV){
     return UV;
   }
   
-out vec4 out_Color;
+layout(location=0,index=0) out vec4 out_Color;
   
 void outputColor(vec4 color) 
 {
@@ -136,6 +136,8 @@ void main()
   //normal blur
   //outputColor(vec4(pow(AO, PowExponent)));
 
-  outputColor(vec4(AO);
+  outputColor(vec4(AO));
   //outputColor(vec4(0.4,0.5,0.2,1.0));
+
+
 }

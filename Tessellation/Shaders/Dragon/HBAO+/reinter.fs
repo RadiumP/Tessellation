@@ -17,11 +17,11 @@ void main() {
   ivec2 QuarterResPos = FullResPos >> 2;
   
 
-//  out_Color = vec4(texelFetch( texResultsArray, ivec3(QuarterResPos, SliceId), 0).xy,0,0);
+  out_Color = vec4(texelFetch( texResultsArray, ivec3(QuarterResPos, SliceId), 0).xy,0,0);
 
-  out_Color = vec4(texelFetch( texResultsArray, ivec3(QuarterResPos, SliceId), 0).x);
+  //out_Color = vec4(texelFetch( texResultsArray, ivec3(QuarterResPos, SliceId), 0).x);
 
   //out_Color = vec4(1.0, 0.2,0.0,0.0);
-  out_Color = vec4(texelFetch(test, QuarterResPos, 0).x);
+  //out_Color = vec4(texelFetch(test, QuarterResPos, 0).x);
   
 }

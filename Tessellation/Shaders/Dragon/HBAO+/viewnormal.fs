@@ -6,6 +6,7 @@ uniform vec4 projInfo;
 uniform vec2 InvFullResolution;
 
 uniform sampler2D gPositionDepth;
+uniform sampler2D gNormal;
 
 
 out vec4 out_Color;
@@ -19,8 +20,9 @@ vec3 UVToView(vec2 uv, float eye_z)
 
 vec3 FetchViewPos(vec2 UV)
 {
-  float ViewDepth = textureLod(gPositionDepth,UV,0).a;
+  float ViewDepth = -textureLod(gPositionDepth,UV,0).a;
   return UVToView(UV, ViewDepth);
+  //return texture(gPositionDepth,UV).xyz;
 }
 
 
@@ -43,6 +45,7 @@ vec3 ReconstructNormal(vec2 UV, vec3 P)
 void main() {
   vec3 P  = FetchViewPos(texCoord);
   vec3 N  = ReconstructNormal(texCoord, P);
-  
+  //vec3 N = texture(gNormal,texCoord).xyz;
   out_Color = vec4(N*0.5 + 0.5,0);
+  //out_Color = vec4(N,0);
 }

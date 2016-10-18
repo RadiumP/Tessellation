@@ -33,7 +33,7 @@ GLuint screenWidth = 1920, screenHeight = 1080;
 float fps = 0;
 int currentTime = 0, previousTime = 0;
 int frameCount = 0;
-int type = 0;
+int type = 3;
 
 //camera control
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -88,14 +88,14 @@ void generateNoiseTex(int width, int height)
 
 	GLint internalFormat = GL_RGBA16F;
 	GLint format = GL_RGBA;
-	GLint type = GL_FLOAT;
+	GLint typea = GL_FLOAT;
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, noise);
+	glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, typea, noise);
 }
 
 int main()
@@ -135,7 +135,7 @@ int main()
 	Shader shaderHBAO("../Shaders/Dragon/HBAO/hbao.vs", "../Shaders/Dragon/HBAO/hbao1.fs");
 	
 	Shader shaderViewnormal("../Shaders/Dragon/HBAO+/fullscreenquad.vs", "../Shaders/Dragon/HBAO+/viewnormal.fs");
-	Shader shaderHBAOPlus("../Shaders/Dragon/HBAO+/fullscreenquad.vs", "../Shaders/Dragon/HBAO/hbaoplus.fs");
+	Shader shaderHBAOPlus("../Shaders/Dragon/HBAO+/fullscreenquad.vs", "../Shaders/Dragon/HBAO+/hbaoplus.fs");
 	Shader shaderDeinter("../Shaders/Dragon/HBAO+/fullscreenquad.vs", "../Shaders/Dragon/HBAO+/deinter.fs");
 	Shader shaderReinter("../Shaders/Dragon/HBAO+/fullscreenquad.vs", "../Shaders/Dragon/HBAO+/reinter.fs");
 	//Shader shaderPlusBlur
@@ -264,7 +264,7 @@ int main()
 	GLuint hbaoplusDepthArray;
 	glGenTextures(1, &hbaoplusDepthArray);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, hbaoplusDepthArray);
-	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, formatAO, quarterWidth, quarterHeight, HBAO_RANDOM_ELEMENTS);
+	glTexStorage3D(GL_TEXTURE_2D_ARRAY, 1, GL_R32F, quarterWidth, quarterHeight, HBAO_RANDOM_ELEMENTS);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -570,8 +570,13 @@ int main()
 
 				glActiveTexture(GL_TEXTURE0);
 				glBindTexture(GL_TEXTURE_2D, gPositionDepth);
+
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, gNormal);
+
 				RenderQuad();
-				
+				//glDrawArrays(GL_TRIANGLES, 0, 3);
+
 				glBindTexture(GL_TEXTURE_2D, 0);
 				
 
@@ -594,88 +599,89 @@ int main()
 						glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + layer, hbaoplusDepthView[i + layer], 0);
 					}
 
-					//RenderQuad();
-					glDrawArrays(GL_TRIANGLES, 0, 3);
+					RenderQuad();
+					//glDrawArrays(GL_TRIANGLES, 0, 3);
 				}
 
 			}
-			//{
-			//	//hbaoplus
-			//	glBindFramebuffer(GL_FRAMEBUFFER, hbaoplusCalc);
-			//	glViewport(0, 0, quarterWidth, quarterHeight);
+			{
+				//hbaoplus
+				glBindFramebuffer(GL_FRAMEBUFFER, hbaoplusCalc);
+				glViewport(0, 0, quarterWidth, quarterHeight);
 
-			//	shaderHBAOPlus.Use();
-			//	
-			//	glActiveTexture(GL_TEXTURE1);
-			//	glBindTexture(GL_TEXTURE_2D, viewnormal);
+				shaderHBAOPlus.Use();
+				
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, viewnormal);
 
-			//	glUniform4fv(glGetUniformLocation(shaderHBAOPlus.Program, "projInfo"), 1, &projInfo[0]);
-			//	glUniform2fv(glGetUniformLocation(shaderHBAOPlus.Program, "InvQuarterResolution"), 1, &InvQuarterResolution[0]);
-			//	
-			//	
-			//	glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "NegInvR2"), NegInvR2);
-			//	glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "NDotVBias"), NDotVBias);
-			//	glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "AOMultiplier"), AOMultiplier);
-			//	glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "RadiusToScreen"), RadiusToScreen);
-			//	glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "PowExponent"), PowExponent);
+				glUniform4fv(glGetUniformLocation(shaderHBAOPlus.Program, "projInfo"), 1, &projInfo[0]);
+				glUniform2fv(glGetUniformLocation(shaderHBAOPlus.Program, "InvQuarterResolution"), 1, &InvQuarterResolution[0]);
+				
+				
+				glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "NegInvR2"), NegInvR2);
+				glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "NDotVBias"), NDotVBias);
+				glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "AOMultiplier"), AOMultiplier);
+				glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "RadiusToScreen"), RadiusToScreen);
+				glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "PowExponent"), PowExponent);
 
-			//	
-			//	//uniform vec4 projInfo;
-			//	//uniform vec2 InvFullResolution;
-			//	//uniform float NegInvR2;
-			//	//uniform float NDotVBias;
-			//	//uniform float AOMultiplier;
-			//	//uniform float RadiusToScreen;
-			//	//uniform float PowExponent;
+				
+				//uniform vec4 projInfo;
+				//uniform vec2 InvFullResolution;
+				//uniform float NegInvR2;
+				//uniform float NDotVBias;
+				//uniform float AOMultiplier;
+				//uniform float RadiusToScreen;
+				//uniform float PowExponent;
 
-			//	////not layered
-			//	//uniform vec2 g_Float2Offset;
-			//	//uniform vec4 g_Jitter;
+				////not layered
+				//uniform vec2 g_Float2Offset;
+				//uniform vec4 g_Jitter;
 
 
-			//	for (int i = 0; i < HBAO_RANDOM_ELEMENTS; i++) {
-			//		glUniform2f(glGetUniformLocation(shaderHBAOPlus.Program, "g_Float2Offset"), float(i % 4) + 0.5f, float(i / 4) + 0.5f);//
-			//		glUniform4fv(glGetUniformLocation(shaderHBAOPlus.Program, "g_Jitter"), 1, &hbaoRandom[i][0]);//jitter
-			//		
-			//		
-			//		glActiveTexture(GL_TEXTURE0);
-			//		glBindTexture(GL_TEXTURE_2D, hbaoplusDepthView[i]);
+				for (int i = 0; i < HBAO_RANDOM_ELEMENTS; i++) {
+					glUniform2f(glGetUniformLocation(shaderHBAOPlus.Program, "g_Float2Offset"), float(i % 4) + 0.5f, float(i / 4) + 0.5f);//
+					glUniform4fv(glGetUniformLocation(shaderHBAOPlus.Program, "g_Jitter"), 1, &hbaoRandom[i][0]);//jitter
+					
+					
+					//glActiveTexture(GL_TEXTURE0);
+					//glBindTexture(GL_TEXTURE_2D, hbaoplusDepthView[i]);
 
-			//		//glBindMultiTextureEXT(GL_TEXTURE0, GL_TEXTURE_2D, hbaoplusDepthview[i]);
-			//		glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, hbaoplusResultArray, 0, i);
+					glBindMultiTextureEXT(GL_TEXTURE0, GL_TEXTURE_2D, hbaoplusDepthView[i]);
+					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, hbaoplusResultArray, 0, i);
+					
+					RenderQuad();
 
-			//		RenderQuad();
+					//glDrawArrays(GL_TRIANGLES, 0, 3);
+				}
+				//RenderQuad();
 
-			//		//glDrawArrays(GL_TRIANGLES, 0, 3);
-			//	}
+			}
+			{
+				//reinter
 
-			//}
-			//{
-			//	//reinter
+				
+				glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
+				//glClear(GL_COLOR_BUFFER_BIT);
 
-			//	
-			//	glBindFramebuffer(GL_FRAMEBUFFER, ssaoFBO);
-			//	glClear(GL_COLOR_BUFFER_BIT);
+				//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+				//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-			//	//glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-			//	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				//glBindFramebuffer(GL_FRAMEBUFFER, fbos.hbao_calc);
+				glDrawBuffer(GL_COLOR_ATTACHMENT0); //??
 
-			//	//glBindFramebuffer(GL_FRAMEBUFFER, fbos.hbao_calc);
-			//	//glDrawBuffer(GL_COLOR_ATTACHMENT0); //??
+				glViewport(0, 0, screenWidth, screenHeight);
 
-			//	glViewport(0, 0, screenWidth, screenHeight);
+				shaderReinter.Use();
+				
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D_ARRAY, hbaoplusResultArray);
+				
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, gPositionDepth);
+				
+				RenderQuad();
 
-			//	shaderReinter.Use();
-			//	
-			//	glActiveTexture(GL_TEXTURE0);
-			//	glBindTexture(GL_TEXTURE_2D_ARRAY, hbaoplusResultArray);
-			//	
-			//	glActiveTexture(GL_TEXTURE1);
-			//	glBindTexture(GL_TEXTURE_2D, gPositionDepth);
-			//	
-			//	RenderQuad();
-
-			//}
+			}
 		
 			
 		}
@@ -690,8 +696,10 @@ int main()
 		
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, ssaoColorBuffer);
+		//glBindTexture(GL_TEXTURE_2D, viewnormal);
 
 		shaderSSAOBlur.Use();
 		
