@@ -1,4 +1,4 @@
-﻿Build started 8/26/2016 12:22:32 AM.
+﻿Build started 11/21/2016 1:19:36 PM.
      1>Project "E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\TessellationTerrian\TessellationTerrian.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\Include /I..\Tessellation /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt Terrian.cpp
@@ -32,4 +32,4 @@
 
 Build FAILED.
 
-Time Elapsed 00:00:00.58
+Time Elapsed 00:00:00.52

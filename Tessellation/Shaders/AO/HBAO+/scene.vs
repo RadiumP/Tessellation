@@ -6,7 +6,7 @@ uniform mat4 model;
 
 in  vec3 pos;
 in  vec3 normal;
-in  vec4 color;
+
 
 
 out vec3 outPos;

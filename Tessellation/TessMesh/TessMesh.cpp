@@ -94,15 +94,15 @@ int main()
 
 
 	//mesh
-	Model myDragon("../Obj/bunny/myBunny.obj");
+	//Model myDragon("../Obj/bunny/myBunny.obj");
 	//Model myDragon("../Obj/bunny/bunny2.obj");
 	//Model myDragon("../Obj/nanosuit/nanosuit.obj");
 	//Model myDragon("../Obj/icosa.obj");
-	//Model myDragon("../Obj/monkey.obj");
+	Model myDragon("../Obj/myMonkey.obj");
 	
 	//wireframe
 	
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	GLuint noiseTex;
 	GLuint heightMap;

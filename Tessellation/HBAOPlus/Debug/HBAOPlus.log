@@ -1,4 +1,4 @@
-﻿Build started 10/17/2016 8:46:45 PM.
+﻿Build started 11/7/2016 11:37:45 AM.
      1>Project "E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\HBAOPlus\HBAOPlus.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
          D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\CL.exe /c /I..\SSAO /I..\Include /I..\Tessellation /I..\TessellationTerrian /I"D:\Thesis\Opengl\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\TessMesh" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /D _CRT_SECURE_NO_WARNINGS /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc140.pdb" /Gd /TP /analyze- /errorReport:prompt hbao.cpp
@@ -8,16 +8,16 @@
      1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\loadmesh.h(182): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
      1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\tessellation\loadmesh.h(183): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
      1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(192): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(395): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(400): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(451): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(841): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(842): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(846): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(847): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(849): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(850): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
-     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(890): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(397): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(402): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(453): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(835): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(836): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(840): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(841): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(843): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(844): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+     1>e:\asu\thesis\tessellation\tessellation(ssao)\tessellation\tessellation\hbaoplus\hbao.cpp(884): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
        Link:
          D:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\HBAOPlus.exe" /INCREMENTAL /NOLOGO /LIBPATH:..\Lib freeglutd.lib glew32.lib "assimp-vc130-mtd.lib" opengl32.lib glfw3.lib SOIL.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /Debug /PDB:"E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\HBAOPlus.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\HBAOPlus.lib" /MACHINE:X86 Debug\hbao.obj
      1>glfw3.lib(context.obj) : warning LNK4099: PDB 'glfw.pdb' was not found with 'glfw3.lib(context.obj)' or at 'E:\ASU\Thesis\Tessellation\Tessellation(SSAO)\Tessellation\Tessellation\Debug\glfw.pdb'; linking object as if no debug info
@@ -41,4 +41,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.15
+Time Elapsed 00:00:01.11

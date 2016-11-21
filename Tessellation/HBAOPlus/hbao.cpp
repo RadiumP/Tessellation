@@ -93,7 +93,7 @@ GLfloat lastX = 400, lastY = 300;
 bool firstMouse = true;
 
 
-float tessLevel = 2.0f;
+float tessLevel = 1.0f;
 
 
 
@@ -162,8 +162,8 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	// Setup and compile our shaders
-	Shader shaderDrawScene("../Shaders/AO/HBAO+/scene.vs", "../Shaders/AO/HBAO+/scene.fs");
-	//Shader shaderDrawScene("../Shaders/AO/HBAO+/tessgeoSSAO.vs", "../Shaders/AO/HBAO+/tessgeoSSAO.fs", "../Shaders/AO/HBAO+/geoSSAO.tcs", "../Shaders/AO/HBAO+/geoSSAO.tes");
+	//Shader shaderDrawScene("../Shaders/AO/HBAO+/scene.vs", "../Shaders/AO/HBAO+/scene.fs");
+	Shader shaderDrawScene("../Shaders/AO/HBAO+/tessgeoSSAO.vs", "../Shaders/AO/HBAO+/tessgeoSSAO.fs", "../Shaders/AO/HBAO+/geoSSAO.tcs", "../Shaders/AO/HBAO+/geoSSAO.tes");
 
 	Shader shaderLinearDepth("../Shaders/AO/HBAO+/fullscreenquad.vs", "../Shaders/AO/HBAO+/depthlinearize.fs");
 	Shader shaderViewNormal("../Shaders/AO/HBAO+/fullscreenquad.vs", "../Shaders/AO/HBAO+/viewnormal.fs");
@@ -227,7 +227,9 @@ int main()
 
 	//init obj
 	//Model scene("../Obj/si.obj");
-	Model scene("../Obj/nanosuit/nanosuit.obj");
+	Model scene("../Obj/myMonkey.obj");
+	//Model scene("../Obj/nanosuit/nanosuit.obj");
+	//Model scene("../Obj/bunny/bunny3.obj");
 
 	//init FrameBuffer
 	
@@ -431,7 +433,7 @@ int main()
 		hbaoData.R = 1.0f;
 		hbaoData.NegInvR2 = -1.0f / (hbaoData.R * hbaoData.R);
 		hbaoData.RadiusToScreen = hbaoData.R * 0.5f * SCR_HEIGHT / (tanf(radians(camera.Zoom) * 0.5f) * 2.0f);
-		hbaoData.PowExponent = 2.0f;
+		hbaoData.PowExponent = 1.0f;
 		hbaoData.NDotVBias = 0.1f;
 		hbaoData.AOMultiplier = 1.0f / (1.0f - hbaoData.NDotVBias);
 		
@@ -443,12 +445,12 @@ int main()
 		std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
 		std::default_random_engine generator;
 		std::vector<glm::vec3> ssaoKernel;
-		for (GLuint i = 0; i < 64; ++i)
+		for (GLuint i = 0; i < 16; ++i)
 		{
 			glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
 			sample = glm::normalize(sample);
 			sample *= randomFloats(generator);
-			GLfloat scale = GLfloat(i) / 64.0;
+			GLfloat scale = GLfloat(i) / 16.0;
 
 			// Scale samples s.t. they're more aligned to center of kernel
 			scale = lerp(0.1f, 1.0f, scale * scale);
@@ -482,7 +484,9 @@ int main()
 			glUniformMatrix4fv(glGetUniformLocation(shaderDrawScene.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 			glUniformMatrix4fv(glGetUniformLocation(shaderDrawScene.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(glGetUniformLocation(shaderDrawScene.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-			
+			glUniform1f(glGetUniformLocation(shaderDrawScene.Program, "tess"), tessLevel);
+
+
 			scene.Draw(shaderDrawScene);
 			
 		
@@ -518,7 +522,7 @@ int main()
 			shaderSSAO.Use();
 
 
-			for (GLuint i = 0; i < 64; ++i)
+			for (GLuint i = 0; i < 16; ++i)
 				glUniform3fv(glGetUniformLocation(shaderSSAO.Program, ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
 			glUniformMatrix4fv(glGetUniformLocation(shaderSSAO.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -554,7 +558,8 @@ int main()
 			glUniform1f(glGetUniformLocation(shaderHBAO.Program, "PowExponent"), hbaoData.PowExponent);
 
 			glBindMultiTextureEXT(GL_TEXTURE0, GL_TEXTURE_2D, textures.scene_depthlinear);
-			glBindMultiTextureEXT(GL_TEXTURE1, GL_TEXTURE_2D, textures.hbao_randomview[0]);
+			//glBindMultiTextureEXT(GL_TEXTURE1, GL_TEXTURE_2D, textures.hbao_randomview[0]);
+			glBindMultiTextureEXT(GL_TEXTURE1, GL_TEXTURE_2D, noiseTexture);
 
 			RenderQuad();
 
@@ -634,17 +639,6 @@ int main()
 				glUniform1f(glGetUniformLocation(shaderHBAOPlus.Program, "PowExponent"), hbaoData.PowExponent);
 
 
-				//uniform vec4 projInfo;
-				//uniform vec2 InvFullResolution;
-				//uniform float NegInvR2;
-				//uniform float NDotVBias;
-				//uniform float AOMultiplier;
-				//uniform float RadiusToScreen;
-				//uniform float PowExponent;
-
-				////not layered
-				//uniform vec2 g_Float2Offset;
-				//uniform vec4 g_Jitter;
 
 
 				for (int i = 0; i < HBAO_RANDOM_ELEMENTS; i++) {
@@ -802,17 +796,17 @@ void Do_Movement()
 		draw_mode = 4;
 	if (keys[GLFW_KEY_5])
 		draw_mode = 5;
-	//if (keys[GLFW_KEY_MINUS])
-	//{
-	//	if (tessLevel > 1.0f)
-	//		tessLevel -= 0.5f;
-	//	//printf("%f", tessLevel);
-	//}
-	//if (keys[GLFW_KEY_EQUAL])
-	//{
-	//	tessLevel += 0.5f;
-	//	//printf("%f", tessLevel);
-	//}
+	if (keys[GLFW_KEY_MINUS])
+	{
+		if (tessLevel > 1.0f)
+			tessLevel -= 0.5f;
+		//printf("%f", tessLevel);
+	}
+	if (keys[GLFW_KEY_EQUAL])
+	{
+		tessLevel += 0.5f;
+		//printf("%f", tessLevel);
+	}
 }
 
 

@@ -4,7 +4,7 @@
 layout(binding=0) uniform sampler2D texLinearDepth;
 layout(binding=1) uniform sampler2D texRandom;
 
-uniform vec3 samples[64];  
+uniform vec3 samples[16];  
 uniform mat4 projection;
 uniform vec4 projInfo;
 uniform vec2 InvFullResolution;
@@ -12,7 +12,7 @@ uniform vec2 InvFullResolution;
 
 layout(location=0,index=0) out vec4 out_Color;
 
-int kernelSize = 64;
+int kernelSize = 16;
 float radius = 1.0;
 
 const vec2 noiseScale = vec2(1920.0f/4.0f, 1080.0f/4.0f);
