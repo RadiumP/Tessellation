@@ -27,7 +27,7 @@ static const int  NUM_MRT = 8;
 static const int  HBAO_RANDOM_SIZE = 4;
 static const int  HBAO_RANDOM_ELEMENTS = HBAO_RANDOM_SIZE*HBAO_RANDOM_SIZE;
 static const int  MAX_SAMPLES = 8;
-
+static const int  SAM = 64;
 
 //texture
 struct {
@@ -371,7 +371,7 @@ int main()
 
 	// Noise texture
 	std::vector<glm::vec3> ssaoNoise;
-	for (GLuint i = 0; i < 16; i++)
+	for (GLuint i = 0; i < SAM; i++)
 	{
 		//glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, 0.0f);//ssao
 		glm::vec3 noise(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator)); // rotate around z-axis (in tangent space)
@@ -445,12 +445,12 @@ int main()
 		std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
 		std::default_random_engine generator;
 		std::vector<glm::vec3> ssaoKernel;
-		for (GLuint i = 0; i < 16; ++i)
+		for (GLuint i = 0; i < SAM; ++i)
 		{
 			glm::vec3 sample(randomFloats(generator) * 2.0 - 1.0, randomFloats(generator) * 2.0 - 1.0, randomFloats(generator));
 			sample = glm::normalize(sample);
 			sample *= randomFloats(generator);
-			GLfloat scale = GLfloat(i) / 16.0;
+			GLfloat scale = GLfloat(i) / (float)SAM;
 
 			// Scale samples s.t. they're more aligned to center of kernel
 			scale = lerp(0.1f, 1.0f, scale * scale);
@@ -522,7 +522,7 @@ int main()
 			shaderSSAO.Use();
 
 
-			for (GLuint i = 0; i < 16; ++i)
+			for (GLuint i = 0; i < SAM; ++i)
 				glUniform3fv(glGetUniformLocation(shaderSSAO.Program, ("samples[" + std::to_string(i) + "]").c_str()), 1, &ssaoKernel[i][0]);
 			glUniformMatrix4fv(glGetUniformLocation(shaderSSAO.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -800,12 +800,13 @@ void Do_Movement()
 	{
 		if (tessLevel > 1.0f)
 			tessLevel -= 0.5f;
-		//printf("%f", tessLevel);
+		//printf("%f\n", tessLevel);
 	}
 	if (keys[GLFW_KEY_EQUAL])
 	{
-		tessLevel += 0.5f;
-		//printf("%f", tessLevel);
+		if(tessLevel < 200.0f)
+			tessLevel += 0.5f;
+		//printf("%f\n", tessLevel);
 	}
 }
 
